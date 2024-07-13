@@ -1,9 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from './Card'
-import List from '../../public/List.json'
+//import List from '../../public/List.json'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 function Course() {
+  const [book, setBook] = useState([]);
+  //intial state=empty array book starts as empty
+  useEffect(() => {
+    //useEffect hook lets you perform side effects in function components
+    //Common examples of side effects include:
+//Fetching data from an API,Updating the DOM directly,Setting up a subscription or timer,Logging to the console
+    const getBook = async () => {
+      try {
+        const res = await axios.get("http://localhost:4001/book");
+        //Declares a constant res to store the response from the API call.
+        //Makes a GET request to the specified URL using axios, an HTTP client for making requests.
+        console.log(res.data);
+        setBook(res.data);
+        //Updates the state variable book with the data received from the API response
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getBook();
+  }, []);
+  //The empty dependency array ensures that the useEffect hook runs only once, after the initial render. If there were dependencies in the array, the effect would re-run whenever those dependencies change.
   return (
     <>
   <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4">
@@ -28,7 +50,7 @@ function Course() {
             </Link>
         </div>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4">
-          {List.map((item) => (
+          {book.map((item) => (
             <Card key={item.id} item={item} />
           ))}
         </div>

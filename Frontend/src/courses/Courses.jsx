@@ -4,6 +4,7 @@ import Course from "../components/Course";
 import Footer from "../components/Footer";
 //import List from '../../public/List.json'
 function Courses() {
+ 
   return (
     <>
       <Navbar />

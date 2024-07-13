@@ -1,12 +1,32 @@
-import React from 'react'
-import List from "../../public/List.json"
+import React,{useEffect,useState} from 'react'
+import axios from 'axios';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Card from './Card';
 
 function Free (){
-  const filterData=List.filter((data)=>data.category==="free");
+  const [book, setBook] = useState([]);
+  //intial state=empty array book starts as empty
+  useEffect(() => {
+    //useEffect hook lets you perform side effects in function components
+    //Common examples of side effects include:
+//Fetching data from an API,Updating the DOM directly,Setting up a subscription or timer,Logging to the console
+    const getBook = async () => {
+      try {
+        const res = await axios.get("http://localhost:4001/book");
+        //Declares a constant res to store the response from the API call.
+        //Makes a GET request to the specified URL using axios, an HTTP client for making requests.
+        console.log(res.data);
+        setBook(res.data.filter((data)=>data.category==="free"));
+        //Updates the state variable book with the data received from the API response
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getBook();
+  }, []);
+  //const filterData=List.filter((data)=>data.category==="free");
   var settings = {
     dots: true,
     infinite: false,
@@ -53,7 +73,7 @@ function Free (){
       
 
       <div><Slider {...settings}>
-       {filterData.map((item)=>(
+       {book.map((item)=>(
         <Card item={item} key={item.id}/>
        ))}
       </Slider></div>
